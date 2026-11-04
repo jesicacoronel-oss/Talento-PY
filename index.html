@@ -30,10 +30,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff; /* Fondo general blanco */
+            background-color: #ffffff;
         }
         
-        /* Animación suave para las tarjetas */
         .card-hover {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -64,9 +63,10 @@
                 </nav>
                 <!-- Botón CTA -->
                 <div class="hidden md:flex">
-                    <a href="#" class="bg-aqua hover:bg-aqua-dark text-white px-5 py-2 rounded-full font-semibold transition shadow-sm">
+                    <!-- Modificado: ahora es un botón que abre el modal -->
+                    <button onclick="openModal()" class="bg-aqua hover:bg-aqua-dark text-white px-5 py-2 rounded-full font-semibold transition shadow-sm">
                         Registrar mi perfil
-                    </a>
+                    </button>
                 </div>
                 <!-- Menú móvil (Hamburguesa) -->
                 <div class="md:hidden flex items-center">
@@ -114,7 +114,6 @@
             <span class="text-sm text-gray-500" id="resultsCount">Mostrando 0 resultados</span>
         </div>
 
-        <!-- Contenedor del Grid (Se llenará con JavaScript) -->
         <div id="talentsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Las tarjetas se insertarán aquí dinámicamente -->
         </div>
@@ -127,134 +126,12 @@
         </div>
     </footer>
 
-    <!-- Lógica JavaScript para simular carga de datos -->
-    <script>
-        // Array de datos simulados (Plantilla vacía/placeholder para cargar datos)
-        const talentsData = [
-            {
-                id: 1,
-                name: "[Nombre del Talento]",
-                role: "[Profesión / Rol]",
-                skills: ["Habilidad 1", "Habilidad 2", "Habilidad 3"],
-                // URL de imagen placeholder usando el color verde agua
-                image: "https://placehold.co/150x150/00B2A9/FFFFFF?text=Foto" 
-            },
-            {
-                id: 2,
-                name: "[Nombre del Talento]",
-                role: "[Profesión / Rol]",
-                skills: ["Habilidad 1", "Habilidad 2"],
-                image: "https://placehold.co/150x150/00B2A9/FFFFFF?text=Foto"
-            },
-            {
-                id: 3,
-                name: "[Nombre del Talento]",
-                role: "[Profesión / Rol]",
-                skills: ["Habilidad 1", "Habilidad 2", "Habilidad 3"],
-                image: "https://placehold.co/150x150/00B2A9/FFFFFF?text=Foto"
-            },
-            {
-                id: 4,
-                name: "[Nombre del Talento]",
-                role: "[Profesión / Rol]",
-                skills: ["Habilidad 1"],
-                image: "https://placehold.co/150x150/00B2A9/FFFFFF?text=Foto"
-            },
-            {
-                id: 5,
-                name: "[Nombre del Talento]",
-                role: "[Profesión / Rol]",
-                skills: ["Habilidad 1", "Habilidad 2", "Habilidad 3"],
-                image: "https://placehold.co/150x150/00B2A9/FFFFFF?text=Foto"
-            },
-            {
-                id: 6,
-                name: "[Nombre del Talento]",
-                role: "[Profesión / Rol]",
-                skills: ["Habilidad 1", "Habilidad 2"],
-                image: "https://placehold.co/150x150/00B2A9/FFFFFF?text=Foto"
-            }
-        ];
-
-        const gridContainer = document.getElementById('talentsGrid');
-        const resultsCount = document.getElementById('resultsCount');
-
-        // Función para renderizar las tarjetas
-        function renderTalents(data) {
-            gridContainer.innerHTML = ''; // Limpiar grid actual
-            resultsCount.textContent = `Mostrando ${data.length} resultados`;
-
-            if (data.length === 0) {
-                gridContainer.innerHTML = `<div class="col-span-full text-center text-gray-500 py-10">No se encontraron perfiles con esa búsqueda.</div>`;
-                return;
-            }
-
-            data.forEach(talent => {
-                // Generar HTML para los chips de habilidades
-                const skillsHtml = talent.skills.map(skill => 
-                    `<span class="bg-white text-aqua text-xs font-semibold px-3 py-1 rounded-full border border-aqua shadow-sm">${skill}</span>`
-                ).join('');
-
-                // Construcción de la tarjeta
-                // Según requerimiento: Fondo verde agua (aqua), letras blancas
-                const card = document.createElement('div');
-                card.className = 'bg-aqua rounded-2xl p-6 flex flex-col items-center text-center card-hover relative overflow-hidden shadow-lg';
-                
-                // Elemento decorativo de fondo opcional (un círculo más claro)
-                const bgCircle = `<div class="absolute -top-10 -right-10 w-32 h-32 bg-aqua-dark rounded-full opacity-50 z-0"></div>`;
-
-                card.innerHTML = `
-                    ${bgCircle}
-                    <div class="relative z-10 w-full flex flex-col items-center">
-                        <img src="${talent.image}" alt="${talent.name}" class="w-24 h-24 rounded-full border-4 border-white shadow-md mb-4 object-cover">
-                        <h3 class="text-xl font-bold text-white mb-1">${talent.name}</h3>
-                        <p class="text-white opacity-90 font-medium mb-4">${talent.role}</p>
-                        
-                        <div class="flex flex-wrap justify-center gap-2 mb-6 w-full">
-                            ${skillsHtml}
-                        </div>
-                        
-                        <button onclick="viewProfile(${talent.id})" class="mt-auto w-full bg-white text-aqua hover:bg-gray-100 font-bold py-2.5 px-4 rounded-xl transition duration-200 shadow">
-                            Ver Perfil
-                        </button>
-                    </div>
-                `;
-                gridContainer.appendChild(card);
-            });
-        }
-
-        // Función simple para filtrar (como demostración)
-        function filterTalents() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = talentsData.filter(talent => 
-                talent.name.toLowerCase().includes(query) || 
-                talent.role.toLowerCase().includes(query) ||
-                talent.skills.some(skill => skill.toLowerCase().includes(query))
-            );
-            renderTalents(filtered);
-        }
-
-        // Función simulada para el botón
-        function viewProfile(id) {
-            // En un proyecto real, esto redirigiría a la página del perfil, ej: window.location.href = `/perfil/${id}`;
-            const talent = talentsData.find(t => t.id === id);
-            console.log(`Visualizando perfil de: ${talent.name}`);
+    <!-- ================= MODAL DE REGISTRO ================= -->
+    <div id="registerModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black bg-opacity-50 px-4 transition-opacity">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]">
             
-            // Simulación visual en lugar de un alert()
-            const btn = event.target;
-            const originalText = btn.innerText;
-            btn.innerText = "Cargando...";
-            btn.classList.add("opacity-75");
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.classList.remove("opacity-75");
-            }, 800);
-        }
-
-        // Inicializar renderizando todos los datos
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTalents(talentsData);
-        });
-    </script>
-</body>
-</html>
+            <!-- Modal Header -->
+            <div class="px-6 pt-6 pb-4 flex justify-between items-start">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900">Sumate al portal</h3>
+                    <p class="text-sm text-gray-500 mt-1">Tus datos se publican al
